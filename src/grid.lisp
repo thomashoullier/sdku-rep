@@ -1,32 +1,40 @@
 ;;;; grid: sudoku problem instance representation.
-(defpackage :sdku-rep
-  (:documentation "Sudoku problem instance representation.")
-  (:use :cl)
-  (:export #:make-grid
-           #:cell))
-
 (in-package :sdku-rep)
 
 (defclass grid ()
   ((mat :documentation "2D array for storing the grid values."
-        :accessor mat :initarg :mat)))
+        :accessor mat :initarg :mat)
+   (order :documentation "Order of the grid (typical sudoku is 3)."
+          :accessor order :initarg :order)))
 
 ;;; Instanciation
 (defun make-grid (n)
-  "Instanciate a grid of order `n`."
-  (make-instance
-   'grid :mat (make-array (list (* n n) (* n n)))))
+  ;; TODO: * Instanciate a map of peers for the order if it does not exist.
+  "Instanciate a grid of order n."
+  (make-instance 'grid
+                 :mat (make-array (list (* n n) (* n n)))
+                 :order n))
 
 ;;; Access
-(defmethod cell ((grid grid) i j)
-  "Read the value in cell in row i column j."
+(defmethod cell ((grid grid) pos)
+  "Read the value in cell at pos."
   (with-slots ((mat mat)) grid
-    (aref mat i j)))
+    (aref mat (pos-row pos) (pos-col pos))))
 
-(defun (setf cell) (new-val grid i j)
-  "setf cell in row i, column j."
+(defun (setf cell) (new-val grid pos)
+  "setf cell at pos."
   (with-slots ((mat mat)) grid
-    (setf (aref mat i j) new-val)))
+    (setf (aref mat (pos-row pos) (pos-col pos)) new-val)))
+
+(defmethod celli ((grid grid) row col)
+  "Read cell by row and col rather than pos."
+  (with-slots ((mat mat)) grid
+    (aref mat row col)))
+
+(defun (setf celli) (new-val grid row col)
+  "setf cell at row, col."
+  (with-slots ((mat mat)) grid
+    (setf (aref mat row col) new-val)))
 
 ;; Setfable places
 ;; (defmethod row )
