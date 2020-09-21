@@ -7,18 +7,21 @@
 ;; (row, col, box or all of them).
 ;; * A pos is not its own peer.
 ;; * A map is true for all grid instances of a given order.
-(defclass map ()
+(defclass sdku-map ()
   ;; TODO: * order will likely be redundant with the way of storing maps.
   ((order :documentation "grid order of the map."
           :accessor order :initarg :order)
+   (vals :documentation "Set of allowable values in the problem.
+                           eg 1 to 9 for n=3."
+         :accessor vals :initarg :vals)
    (peers-row-mat :documentation "Peers of pos in its row."
-                  :accessor peers-row :initarg :peers-row)
+                  :accessor peers-row-mat :initarg :peers-row-mat)
    (peers-col-mat :documentation "Peers of pos in its col."
-                  :accessor peers-col :initarg :peers-col)
+                  :accessor peers-col-mat :initarg :peers-col-mat)
    (peers-box-mat :documentation "Peers of pos in its box."
-                  :accessor peers-box :initarg :peers-box)
-   (peers-mat :documentation "Peers of pos in ALL units."
-              :accessor peers :initarg :peers)))
+                  :accessor peers-box-mat :initarg :peers-box-mat)
+   (peers-all-mat :documentation "Peers of pos in ALL units."
+                  :accessor peers-all-mat :initarg :peers-all-mat)))
 
 (defun make-peers-row (n pos)
   "Make the list of peers in the row of pos."
@@ -57,6 +60,29 @@
           :test #'equalp))
 
 (defun make-map (n)
-  "Instanciate a map for problems of order n."
+  "Instantiate a map for problems of order n."
+  (let ((peers-row-mat (make-array (list (* n n) (* n n))))
+        (peers-col-mat (make-array (list (* n n) (* n n))))
+        (peers-box-mat (make-array (list (* n n) (* n n))))
+        (peers-all-mat (make-array (list (* n n) (* n n))))
+        (pos-cur (make-pos)))
+    (loop for i from 0 below n do
+      (loop for j from 0 below n do
+        (psetf (pos-row pos-cur) i (pos-col pos-cur) j)
+        (psetf (aref peers-row-mat i j) (make-peers-row n pos-cur)
+               (aref peers-col-mat i j) (make-peers-col n pos-cur)
+               (aref peers-box-mat i j) (make-peers-box n pos-cur)
+               (aref peers-all-mat i j) (make-peers-all n pos-cur))))
+    (make-instance
+     'sdku-map :order n
+     :peers-row-mat peers-row-mat
+     :peers-col-mat peers-col-mat
+     :peers-box-mat peers-box-mat
+     :peers-all-mat peers-all-mat)))
 
+;;; Global map for each order.
+(defvar *maps* (make-hash-table))
+
+(defun glob-map (n)
+  "Create a global map for order n if it wasn't already created."
   )
