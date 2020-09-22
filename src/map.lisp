@@ -12,7 +12,7 @@
   ((order :documentation "grid order of the map."
           :accessor order :initarg :order)
    (vals :documentation "Set of allowable values in the problem.
-                           eg 1 to 9 for n=3."
+                           eg. 1 to 9 for n=3."
          :accessor vals :initarg :vals)
    (peers-row-mat :documentation "Peers of pos in its row."
                   :accessor peers-row-mat :initarg :peers-row-mat)
@@ -59,6 +59,10 @@
                   (make-peers-box n pos) :test #'equalp)
           :test #'equalp))
 
+(defun make-vals (n)
+  "Create the list of allowable values in the problem."
+  (loop for i from 1 upto (* n n) collect i))
+
 (defun make-map (n)
   "Instantiate a map for problems of order n."
   (let ((peers-row-mat (make-array (list (* n n) (* n n))))
@@ -78,11 +82,16 @@
      :peers-row-mat peers-row-mat
      :peers-col-mat peers-col-mat
      :peers-box-mat peers-box-mat
-     :peers-all-mat peers-all-mat)))
+     :peers-all-mat peers-all-mat
+     :vals (make-vals n))))
 
 ;;; Global map for each order.
 (defvar *maps* (make-hash-table))
 
-(defun glob-map (n)
+(defun make-glob-map (n)
   "Create a global map for order n if it wasn't already created."
-  )
+  (when (not (nth-value 1 (gethash n *maps*)))
+    (setf (gethash n *maps*) (make-map n)))
+  (gethash n *maps*))
+
+;; TODO: free map function

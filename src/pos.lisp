@@ -7,6 +7,9 @@
   (row 0 :type fixnum)
   (col 0 :type fixnum))
 
+(defun pos (i j)
+  (make-pos :row i :col j))
+
 (defun posref (mat pos)
   "custom aref for pos."
   (aref mat (pos-row pos) (pos-col pos)))
