@@ -8,7 +8,6 @@
 ;; * A pos is not its own peer.
 ;; * A map is true for all grid instances of a given order.
 (defclass sdku-map ()
-  ;; TODO: * order will likely be redundant with the way of storing maps.
   ((order :documentation "grid order of the map."
           :accessor order :initarg :order)
    (vals :documentation "Set of allowable values in the problem.

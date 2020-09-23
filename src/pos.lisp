@@ -1,8 +1,5 @@
 (in-package :sdku-rep)
 
-;; TODO: * Reader macro for pos? To be able to create positions
-;;         with #POS(i j) or similar. Or just a function (pos i j)?
-
 (defstruct pos
   (row 0 :type fixnum)
   (col 0 :type fixnum))
