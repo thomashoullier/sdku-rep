@@ -12,7 +12,7 @@
   ((order :documentation "grid order of the map."
           :accessor order :initarg :order)
    (vals :documentation "Set of allowable values in the problem.
-                           eg. 1 to 9 for n=3."
+                         eg. 1 to 9 for n=3."
          :accessor vals :initarg :vals)
    (peers-row-mat :documentation "Peers of pos in its row."
                   :accessor peers-row-mat :initarg :peers-row-mat)
@@ -70,8 +70,8 @@
         (peers-box-mat (make-array (list (* n n) (* n n))))
         (peers-all-mat (make-array (list (* n n) (* n n))))
         (pos-cur (make-pos)))
-    (loop for i from 0 below n do
-      (loop for j from 0 below n do
+    (loop for i from 0 below (* n n) do
+      (loop for j from 0 below (* n n) do
         (psetf (pos-row pos-cur) i (pos-col pos-cur) j)
         (psetf (aref peers-row-mat i j) (make-peers-row n pos-cur)
                (aref peers-col-mat i j) (make-peers-col n pos-cur)

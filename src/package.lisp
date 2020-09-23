@@ -3,4 +3,10 @@
   (:use :cl)
   (:export #:make-grid
            #:cell
-           #:make-pos))
+           #:pos
+           #:order
+           #:vals
+           #:peers-row
+           #:peers-col
+           #:peers-box
+           #:peers))
